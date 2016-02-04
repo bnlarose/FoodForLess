@@ -40,7 +40,9 @@ public class FoodForLess{
                 System.out.printf(output.get(i));
             }
         } else {
-            System.out.printf(output.get(0), output.get(1));
+            for (int i=0; i<output.size(); i+2){
+                System.out.printf(output.get(i), output.get(i+1));
+            }
         }
     }
 
@@ -70,7 +72,6 @@ public class FoodForLess{
             fileInput = new Scanner(new File(fileName));
         }
         catch ( FileNotFoundException fnfex){
-            //System.out.printf("The specified file (%s) cannot be opened.", fileName);
             ArrayList<String> output = new ArrayList<String>(Arrays.asList("The specified file (%s) cannot be opened.%n", fileName));
             printOutput(2, output);
         }
@@ -181,7 +182,7 @@ public class FoodForLess{
     */ 
     public static void giveStock(int option) throws IOException{
         if (option==1){ 
-            System.out.printf("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:");
+            ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:"));
             System.out.printf("%-15s %-15s %-15s %-15s %-15s%n","Item", "Description", "Quantity", "Unit Price", "Stock Total");
             for (int i=0; i<size; i++){
               System.out.printf("%-15s %-15s %-15d %10.2f %16.2f%n", productCodeArray.get(i), descriptionArray.get(i), stockArray.get(i), priceArray.get(i), (stockArray.get(i)*priceArray.get(i)));
