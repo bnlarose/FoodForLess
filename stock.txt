@@ -1,0 +1,5 @@
+M101 Milk 18 10.45
+F4WR Flour 26 11.90
+3GGZ Eggs 0 13.30
+8U773R Butter 49 4.25
+CB33F Corned_Beef 0 18.50
