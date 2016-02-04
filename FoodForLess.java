@@ -159,17 +159,17 @@ public class FoodForLess{
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
     public static void getAnother() throws IOException{
-        Scanner keyboard = new Scanner(System.in);
         String response = "";
-        System.out.printf("%nWould you like to perform another operation? [Yes/No]: ");
-        response = keyboard.next();
+        response = getUserInput("%nWould you like to perform another operation? [Yes/No]: ");
         switch (response.toLowerCase()){
             case "y": case "yes": pickOption();
                 break;
-            case "n": case "no": System.out.printf("Goodbye!\n");
+            case "n": case "no": ArrayList<String> farewell= new ArrayList<String>(Arrays.asList("Goodbye!\n"));
+                printOutput(1, farewell);
                 updateStockFile();
                 break;
-            default: System.out.printf("Please enter a valid response.\n");
+            default: ArrayList<String> valid= new ArrayList<String>(Arrays.asList("Please enter a valid response.\n"));
+                printOutput(1, valid);
                 getAnother();
         }
     }
