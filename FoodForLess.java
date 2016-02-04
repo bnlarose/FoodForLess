@@ -40,7 +40,7 @@ public class FoodForLess{
                 System.out.printf(output.get(i));
             }
         } else {
-            for (int i=0; i<output.size(); i+2){
+            for (int i=0; i<output.size(); i+=2){
                 System.out.printf(output.get(i), output.get(i+1));
             }
         }
@@ -104,10 +104,10 @@ public class FoodForLess{
     * Displays a greeting message, identifying the company
     */ 
     public static void greeting(){
-        ArrayList<String> greetings1= new ArrayList<String>(Arrays.asList("%50s%n", "Welcome to Foods for Less Grocery."));
+        ArrayList<String> greetings1= new ArrayList<String>(Arrays.asList("%50s%n", "Welcome to Foods for Less Grocery.", "%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
         printOutput(2,greetings1);
-        ArrayList<String> greetings2= new ArrayList<String>(Arrays.asList("%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
-        printOutput(2,greetings2);      
+        /*ArrayList<String> greetings2= new ArrayList<String>(Arrays.asList("%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
+        printOutput(2,greetings2);*/      
     }
 
     /**
