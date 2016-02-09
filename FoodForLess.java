@@ -195,17 +195,13 @@ public class FoodForLess{
         }else{
             ArrayList<String> header2= new ArrayList<String>(Arrays.asList("%35s\n", "YOUR ORDER:","%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Item Total"));
             printOutput(2, header2);
-            //System.out.printf("%35s%25s\n", "YOUR ORDER:", "");            
-            //System.out.printf("%-15s %-15s %-15s %-15s%n", "Description", "Quantity", "Unit Price", "Item Total");
             for (int i=0; i<ordQuant.size(); i++){
                 String description= descriptionArray.get(productCodeArray.indexOf(ordProdCode.get(i)));
                 int quant = ordQuant.get(i);
-                //String filler = "";
                 double price= priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)));
                 double itemTotal= ordQuant.get(i)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)));
                 ArrayList<String> invoice = new ArrayList<String>(Arrays.asList("%-15s", description, "%8s", Integer.toString(quant), "%7s", "", "%12s", String.format("%10.2f", price),"%16s%n", String.format("%13.2f", itemTotal)));
                 printOutput(2, invoice);
-                //System.out.printf("%-15s %8d %7s %9.2f %15.2f %n", descriptionArray.get(productCodeArray.indexOf(ordProdCode.get(i))), ordQuant.get(i), "",priceArray.get(productCodeArray.indexOf(ordProdCode.get(i))), (ordQuant.get(i)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)))));
             }
             ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
             printOutput(2, ordTotal);
@@ -219,10 +215,15 @@ public class FoodForLess{
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
     public static void getWhatsOut()throws IOException{
-        System.out.printf("***********OUT OF STOCK ITEMS***********\n");
+        ArrayList<String> header= new ArrayList<String>(Arrays.asList("%n***********OUT OF STOCK ITEMS***********%n"));
+        printOutput(1, header);
+        //System.out.printf("***********OUT OF STOCK ITEMS***********\n");
         for (int i =0; i<size; i++){
             if (stockArray.get(i)==0){
-                System.out.printf("%s\n",descriptionArray.get(i));
+                String item = descriptionArray.get(i);
+                ArrayList<String> out = new ArrayList<String>(Arrays.asList("%s%n", item));
+                printOutput(2, out);
+                //System.out.printf("%s\n",descriptionArray.get(i));
             }
         }
         getAnother();
