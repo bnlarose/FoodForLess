@@ -217,13 +217,11 @@ public class FoodForLess{
     public static void getWhatsOut()throws IOException{
         ArrayList<String> header= new ArrayList<String>(Arrays.asList("%n***********OUT OF STOCK ITEMS***********%n"));
         printOutput(1, header);
-        //System.out.printf("***********OUT OF STOCK ITEMS***********\n");
         for (int i =0; i<size; i++){
             if (stockArray.get(i)==0){
                 String item = descriptionArray.get(i);
                 ArrayList<String> out = new ArrayList<String>(Arrays.asList("%s%n", item));
                 printOutput(2, out);
-                //System.out.printf("%s\n",descriptionArray.get(i));
             }
         }
         getAnother();
@@ -240,7 +238,9 @@ public class FoodForLess{
             for (int i=0; i<size; i++){
                 count+=(stockArray.get(i)*priceArray.get(i));
             }
-            System.out.printf("%nThe total value of the current stock is $%4.2f%n",count);
+            ArrayList<String> total= new ArrayList<String>(Arrays.asList("%nThe total value of the current stock is $%s%n", String.format("%4.2f", count)));
+            printOutput(2, total);
+            //System.out.printf("%nThe total value of the current stock is $%4.2f%n",count);
             getAnother();
         }else{
             for (int j=0; j<ordQuant.size(); j++){
