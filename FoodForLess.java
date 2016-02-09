@@ -240,7 +240,6 @@ public class FoodForLess{
             }
             ArrayList<String> total= new ArrayList<String>(Arrays.asList("%nThe total value of the current stock is $%s%n", String.format("%4.2f", count)));
             printOutput(2, total);
-            //System.out.printf("%nThe total value of the current stock is $%4.2f%n",count);
             getAnother();
         }else{
             for (int j=0; j<ordQuant.size(); j++){
@@ -256,13 +255,27 @@ public class FoodForLess{
     */ 
     public static void getMostExpensive() throws IOException{
         double big = priceArray.get(0);
-        int position = 0;
+        ArrayList<Integer> upper= new ArrayList<Integer>();
+        //int position = 0;
         for (int i=1; i<size; i++){
             if (priceArray.get(i)>big){
-                position = i;
+                upper.clear();
+                upper.add(i);
+                big=priceArray.get(i);
+            }
+            else if (priceArray.get(i)==big){
+                upper.add(i);
             }
         }
-        System.out.printf("%nThe most expensive food item is %s, which costs $%2.2f.%n",descriptionArray.get(position),priceArray.get(position));
+        ArrayList<String> header = new ArrayList<String>(Arrays.asList("%n%42s%n", "***********MOST EXPENSIVE ITEMS***********", "%-20s", "Description", "%10s%n", "Price"));
+        printOutput(2, header);
+        int upperSize= upper.size();
+        for (int j=0; j<upperSize; j++){
+            String desc= descriptionArray.get(upper.get(j));
+            double price= priceArray.get(upper.get(j));
+            ArrayList<String> pricey= new ArrayList<String>(Arrays.asList("%-20s", desc, "%10s%n", String.format("%4.2f", price)));
+            printOutput(2, pricey);
+        }
         getAnother();
     }
 
