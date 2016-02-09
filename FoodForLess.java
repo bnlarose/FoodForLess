@@ -180,19 +180,35 @@ public class FoodForLess{
     */ 
     public static void giveStock(int option) throws IOException{
         if (option==1){ 
-            ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:"));
-            System.out.printf("%-15s %-15s %-15s %-15s %-15s%n","Item", "Description", "Quantity", "Unit Price", "Stock Total");
+            ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:", "%-16s", "Item", "%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Stock Total"));
+            printOutput(2, header);
             for (int i=0; i<size; i++){
-              System.out.printf("%-15s %-15s %-15d %10.2f %16.2f%n", productCodeArray.get(i), descriptionArray.get(i), stockArray.get(i), priceArray.get(i), (stockArray.get(i)*priceArray.get(i)));
+                String productCode= productCodeArray.get(i);
+                String description = descriptionArray.get(i);
+                int stock = stockArray.get(i);
+                double price= priceArray.get(i);
+                double totals= stockArray.get(i)*priceArray.get(i);
+                ArrayList<String> listing = new ArrayList<String>(Arrays.asList("%-16s", productCode, "%-20s", description, "%-12s", Integer.toString(stock), "%10s", String.format("%10.2f", price), "%17s%n", String.format("%13.2f", totals)));
+                printOutput(2, listing);
             }
             getAnother();
         }else{
-            System.out.printf("%35s%25s\n", "YOUR ORDER:", "");            
-            System.out.printf("%-15s %-15s %-15s %-15s%n", "Description", "Quantity", "Unit Price", "Item Total");
+            ArrayList<String> header2= new ArrayList<String>(Arrays.asList("%35s\n", "YOUR ORDER:","%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Item Total"));
+            printOutput(2, header2);
+            //System.out.printf("%35s%25s\n", "YOUR ORDER:", "");            
+            //System.out.printf("%-15s %-15s %-15s %-15s%n", "Description", "Quantity", "Unit Price", "Item Total");
             for (int i=0; i<ordQuant.size(); i++){
-                System.out.printf("%-15s %8d %7s %9.2f %15.2f %n", descriptionArray.get(productCodeArray.indexOf(ordProdCode.get(i))), ordQuant.get(i), "",priceArray.get(productCodeArray.indexOf(ordProdCode.get(i))), (ordQuant.get(i)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)))));
+                String description= descriptionArray.get(productCodeArray.indexOf(ordProdCode.get(i)));
+                int quant = ordQuant.get(i);
+                //String filler = "";
+                double price= priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)));
+                double itemTotal= ordQuant.get(i)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)));
+                ArrayList<String> invoice = new ArrayList<String>(Arrays.asList("%-15s", description, "%8s", Integer.toString(quant), "%7s", "", "%12s", String.format("%10.2f", price),"%16s%n", String.format("%13.2f", itemTotal)));
+                printOutput(2, invoice);
+                //System.out.printf("%-15s %8d %7s %9.2f %15.2f %n", descriptionArray.get(productCodeArray.indexOf(ordProdCode.get(i))), ordQuant.get(i), "",priceArray.get(productCodeArray.indexOf(ordProdCode.get(i))), (ordQuant.get(i)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(i)))));
             }
-            System.out.printf("%n %41s %4s %10.2f %n","Total", "", ordValue);
+            ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
+            printOutput(2, ordTotal);
             adjustInventory();
             getAnother();
         }
