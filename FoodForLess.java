@@ -114,10 +114,8 @@ public class FoodForLess{
     * Presents the user with a listing of the program's features. Subsequent to this, the user is allowed to specify their desired option.
     */ 
     public static void giveOptions(){
-        ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n"));
+        ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n"));
         printOutput(1, prompt);
-        ArrayList<String> options= new ArrayList<String>(Arrays.asList("1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n"));
-        printOutput(1, options);
     }
 
     /**
