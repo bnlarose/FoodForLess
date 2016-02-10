@@ -331,7 +331,6 @@ public class FoodForLess{
                 String desc= descriptionArray.get(i);
                 ArrayList<String> items= new ArrayList<String>(Arrays.asList("%-10s ", code, "%s%n", desc));
                 printOutput(2, items);
-                //System.out.printf("%s %s%n",productCodeArray.get(i), descriptionArray.get(i));
             }
         }
     }
@@ -341,16 +340,19 @@ public class FoodForLess{
     *@param i The loop count (and item number, if increased by 1). Used in this procedure to help the user keep track of the current item's position in the intended order
     */ 
     public static void verifyProdCode(int i){
-        Scanner keyboard = new Scanner(System.in);
         giveProdCodes();
-        System.out.printf("Please enter the product code for item %d: ", i+1);
-        String ordProductCode = keyboard.next();
+        int itemNo= i+1;
+        //ArrayList<String> codePrompt= new ArrayList<String>(Arrays.asList("Please enter the product code for item %s: ", Integer.toString(itemNo)));
+        String prompt= "Please enter the product code for item"+Integer.toString(itemNo)+": ";
+        String ordProductCode = getUserInput(prompt);
         ordProductCode = ordProductCode.toUpperCase();
         int position = productCodeArray.indexOf(ordProductCode);
         if (position>=0){
             verifyQuantity(position, i);
         }else{
-            System.out.printf("I'm sorry, but that product code does not exist in our inventory.%n");
+            ArrayList<String> error= new ArrayList<String>(Arrays.asList("I'm sorry, but that product code does not exist in our inventory.%n"));
+            printOutput(1, error);
+            //System.out.printf("I'm sorry, but that product code does not exist in our inventory.%n");
             verifyProdCode(i);
         }
     }
