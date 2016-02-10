@@ -323,10 +323,15 @@ public class FoodForLess{
     * Lists the product codes of the current inventory. Used in tandem with {@link #verifyProductCode()}
     */ 
     public static void giveProdCodes(){
-        System.out.printf("\nThese are the product codes of the items currently in stock: %n");
+        ArrayList<String> listing= new ArrayList<String>(Arrays.asList("\nThese are the product codes of the items currently in stock: %n"));
+        printOutput(1, listing);
         for (int i=0; i<size; i++){
             if (stockArray.get(i)>0){
-                System.out.printf("%s %s%n",productCodeArray.get(i), descriptionArray.get(i));
+                String code= productCodeArray.get(i);
+                String desc= descriptionArray.get(i);
+                ArrayList<String> items= new ArrayList<String>(Arrays.asList("%-10s ", code, "%s%n", desc));
+                printOutput(2, items);
+                //System.out.printf("%s %s%n",productCodeArray.get(i), descriptionArray.get(i));
             }
         }
     }
