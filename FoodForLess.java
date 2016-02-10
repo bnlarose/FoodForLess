@@ -105,9 +105,7 @@ public class FoodForLess{
     */ 
     public static void greeting(){
         ArrayList<String> greetings1= new ArrayList<String>(Arrays.asList("%50s%n", "Welcome to Foods for Less Grocery.", "%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
-        printOutput(2,greetings1);
-        /*ArrayList<String> greetings2= new ArrayList<String>(Arrays.asList("%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
-        printOutput(2,greetings2);*/      
+        printOutput(2,greetings1);     
     }
 
     /**
