@@ -342,7 +342,6 @@ public class FoodForLess{
     public static void verifyProdCode(int i){
         giveProdCodes();
         int itemNo= i+1;
-        //ArrayList<String> codePrompt= new ArrayList<String>(Arrays.asList("Please enter the product code for item %s: ", Integer.toString(itemNo)));
         String prompt= "Please enter the product code for item"+Integer.toString(itemNo)+": ";
         String ordProductCode = getUserInput(prompt);
         ordProductCode = ordProductCode.toUpperCase();
@@ -352,7 +351,6 @@ public class FoodForLess{
         }else{
             ArrayList<String> error= new ArrayList<String>(Arrays.asList("I'm sorry, but that product code does not exist in our inventory.%n"));
             printOutput(1, error);
-            //System.out.printf("I'm sorry, but that product code does not exist in our inventory.%n");
             verifyProdCode(i);
         }
     }
@@ -362,14 +360,23 @@ public class FoodForLess{
     *@param position The position of the selected product's data in the main program arrays
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
     */ 
-    public static void verifyQuantity(int position, int i){
-        Scanner keyboard = new Scanner(System.in);
-        System.out.printf("\nWe have %d %s in stock. How many would you like?: ", stockArray.get(position), descriptionArray.get(position));
-        int quant = keyboard.nextInt();
-        if (quant<=stockArray.get(position)){
-            addToOrder(position, quant, i);
-        }else{
-            System.out.printf("I'm sorry, but you can order a maximum of %d %s.%n", stockArray.get(position), descriptionArray.get(position));
+    public static void verifyQuantity(int position, int i) throws NumberFormatException{
+        String avail= Integer.toString(stockArray.get(position));
+        String desc= descriptionArray.get(position);
+        String prompt= "%nWe have " + avail + " "+ desc + " in stock. How many would you like?: ";
+        //System.out.printf("\nWe have %d %s in stock. How many would you like?: ", stockArray.get(position), descriptionArray.get(position));
+        try{
+            int quant = Integer.valueOf(getUserInput(prompt));
+            if (quant<=stockArray.get(position)){
+                addToOrder(position, quant, i);
+            }else{
+                ArrayList<String> tooMany= new ArrayList<String>(Arrays.asList("I'm sorry, but you can order a maximum of "+ avail +" " + desc));
+                //System.out.printf("I'm sorry, but you can order a maximum of %d %s.%n", stockArray.get(position), descriptionArray.get(position));
+                verifyQuantity(position, i);
+            }
+        } catch (NumberFormatException inval){
+            ArrayList<String> wType= new ArrayList<String>(Arrays.asList("I'm pretty sure that's not even a number..."));
+            printOutput(1, wType);
             verifyQuantity(position, i);
         }
     }
