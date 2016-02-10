@@ -284,14 +284,13 @@ public class FoodForLess{
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getOrderSize() throws InputMismatchException, IOException{
+    public static void getOrderSize() throws InputMismatchException, IOException, NumberFormatException{
         try{
-            Scanner keyboard = new Scanner(System.in);
-            System.out.printf("\nHow many items would you like to order?: ");
-            int orderSize = keyboard.nextInt();        
+            int orderSize= Integer.valueOf(getUserInput("\nHow many items would you like to order?: "));
             placeOrders(orderSize, 1);
-        } catch (InputMismatchException wType) {
-            System.out.printf("\nPlease enter a valid number size.\n");
+        } catch (InputMismatchException|NumberFormatException wType) {
+            ArrayList<String> valNum= new ArrayList<String>(Arrays.asList("\nPlease enter a valid number size.\n"));
+            printOutput(1, valNum);
             getOrderSize();
         }        
     }
