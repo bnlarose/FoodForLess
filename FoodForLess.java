@@ -399,9 +399,7 @@ public class FoodForLess{
     */   
     public static int optOut(){
         ArrayList<String> negatives= new ArrayList<String>(Arrays.asList("no", "n"));
-        Scanner option = new Scanner(System.in);
-        System.out.printf("Type 'N' or 'No' to stop ordering [No/N]: ");
-        String response = option.next();
+        String response = getUserInput("Type 'N' or 'No' to stop ordering [No/N]: ");
         response = response.toLowerCase();
         int prompt= 0;
         if (negatives.contains(response)){
