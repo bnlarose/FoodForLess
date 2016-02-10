@@ -364,14 +364,12 @@ public class FoodForLess{
         String avail= Integer.toString(stockArray.get(position));
         String desc= descriptionArray.get(position);
         String prompt= "%nWe have " + avail + " "+ desc + " in stock. How many would you like?: ";
-        //System.out.printf("\nWe have %d %s in stock. How many would you like?: ", stockArray.get(position), descriptionArray.get(position));
         try{
             int quant = Integer.valueOf(getUserInput(prompt));
             if (quant<=stockArray.get(position)){
                 addToOrder(position, quant, i);
             }else{
                 ArrayList<String> tooMany= new ArrayList<String>(Arrays.asList("I'm sorry, but you can order a maximum of "+ avail +" " + desc));
-                //System.out.printf("I'm sorry, but you can order a maximum of %d %s.%n", stockArray.get(position), descriptionArray.get(position));
                 verifyQuantity(position, i);
             }
         } catch (NumberFormatException inval){
@@ -390,7 +388,9 @@ public class FoodForLess{
     public static void addToOrder(int position, int quant, int i){
         ordProdCode.add(productCodeArray.get(position));
         ordQuant.add(quant);
-        System.out.printf("%d %s have been added to your order.%n%n", quant, descriptionArray.get(position));
+        String message= Integer.toString(quant)+ " "+ descriptionArray.get(position)+ " have been added to your order.%n%n";
+        ArrayList<String> confirmation= new ArrayList<String>(Arrays.asList(message));
+        printOutput(1, confirmation);
     }
 
     /**
