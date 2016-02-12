@@ -25,8 +25,6 @@ public class FoodForLess{
 
     public static void main(String[] args) throws IOException{
         populateArrays();
-        greeting();
-        pickOption();
     }
 
     /**
@@ -98,6 +96,7 @@ public class FoodForLess{
             }      
         }
         size = priceArray.size();
+        greeting();
     }
 
     /**
@@ -105,7 +104,8 @@ public class FoodForLess{
     */ 
     public static void greeting(){
         ArrayList<String> greetings1= new ArrayList<String>(Arrays.asList("%50s%n", "Welcome to Foods for Less Grocery.", "%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
-        printOutput(2,greetings1);     
+        printOutput(2,greetings1);
+        pickOption();     
     }
 
     /**
