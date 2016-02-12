@@ -54,7 +54,6 @@ public class FoodForLess{
         Scanner keyboard = new Scanner(System.in);
         System.out.printf(prompt);
         input= keyboard.next();
-        //System.out.printf("%nYour input was %s", input);
         return input;
     }
 
