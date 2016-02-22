@@ -26,7 +26,7 @@ public class FoodForLess{
 
             size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
             greeting();
-            pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size);
+            pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
     }
 
     /**
@@ -122,7 +122,7 @@ public class FoodForLess{
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void pickOption(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size) throws InputMismatchException, IOException, NumberFormatException{
+    public static void pickOption(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws InputMismatchException, IOException, NumberFormatException{
         int option = 0;        
         giveOptions();        
         while (option<1 || option>5){
@@ -133,7 +133,7 @@ public class FoodForLess{
             }catch (InputMismatchException|NumberFormatException e){
                 ArrayList<String> badInput= new ArrayList<String>(Arrays.asList("That's definitely not an option on the list.%n"));
                 printOutput(1, badInput);
-                pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size);
+                pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
             }            
         }
          switch(option){
@@ -147,7 +147,7 @@ public class FoodForLess{
                 break;
             case 5: getOrderSize();
                 break;*/
-            default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size);
+            default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
         }                      
     }
