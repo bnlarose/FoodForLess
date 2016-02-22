@@ -141,9 +141,9 @@ public class FoodForLess{
                 break;
             case 3: getTotalValue(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            /*case 4: getMostExpensive(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case 4: getMostExpensive(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            case 5: getOrderSize();
+            /*case 5: getOrderSize();
                 break;*/
             default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
@@ -250,10 +250,9 @@ public class FoodForLess{
     * Displays the most expensive item in the inventory
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void getMostExpensive() throws IOException{
+    public static void getMostExpensive(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
         double big = priceArray.get(0);
         ArrayList<Integer> upper= new ArrayList<Integer>();
-        //int position = 0;
         for (int i=1; i<size; i++){
             if (priceArray.get(i)>big){
                 upper.clear();
