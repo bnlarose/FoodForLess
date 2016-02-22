@@ -28,7 +28,7 @@ public class FoodForLess{
 
         size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
         System.out.printf("%d%n", size);
-        //giveStock(size, productCodeArray, descriptionArray, stockArray, priceArray);
+        giveStock(1, size, productCodeArray, descriptionArray, stockArray, priceArray);
     }
 
     /**
@@ -173,14 +173,14 @@ public class FoodForLess{
                 printOutput(1, valid);
                 getAnother();
         }
-    }
+    }*/
 
     /**
     * Displays the full stock list, inclusive of out of stock items; or displays the current custom order, depended on the mode selected.
     *@param option Specifies the mode (and relative function) of the procedure. Mode 1 displays the full stock list. Mode 2 displays the details of a custom order 
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void giveStock(int option) throws IOException{
+    public static void giveStock(int option, int size, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray) throws IOException{
         if (option==1){ 
             ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:", "%-16s", "Item", "%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Stock Total"));
             printOutput(2, header);
@@ -193,7 +193,7 @@ public class FoodForLess{
                 ArrayList<String> listing = new ArrayList<String>(Arrays.asList("%-16s", productCode, "%-20s", description, "%-12s", Integer.toString(stock), "%10s", String.format("%10.2f", price), "%17s%n", String.format("%13.2f", totals)));
                 printOutput(2, listing);
             }
-            getAnother();
+            /*getAnother();
         }else{
             ArrayList<String> header2= new ArrayList<String>(Arrays.asList("%35s\n", "YOUR ORDER:","%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Item Total"));
             printOutput(2, header2);
@@ -207,8 +207,8 @@ public class FoodForLess{
             }
             ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
             printOutput(2, ordTotal);
-            adjustInventory();
-            getAnother();
+            //adjustInventory();
+            //getAnother();*/
         }
     }
 
