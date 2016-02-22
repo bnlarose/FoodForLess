@@ -105,8 +105,7 @@ public class FoodForLess{
     */ 
     public static void greeting(){
         ArrayList<String> greetings1= new ArrayList<String>(Arrays.asList("%50s%n", "Welcome to Foods for Less Grocery.", "%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
-        printOutput(2,greetings1);
-        //pickOption();     
+        printOutput(2,greetings1);    
     }
 
     /**
@@ -138,9 +137,9 @@ public class FoodForLess{
          switch(option){
             case 1: giveStock(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            /*case 2: getWhatsOut();
+            case 2: getWhatsOut(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            case 3: getTotalValue(1);
+            /*case 3: getTotalValue(1);
                 break;
             case 4: getMostExpensive();
                 break;
@@ -212,7 +211,7 @@ public class FoodForLess{
     * Displays those items that are currently out of stock
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void getWhatsOut()throws IOException{
+    public static void getWhatsOut(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes)throws IOException{
         ArrayList<String> header= new ArrayList<String>(Arrays.asList("%n***********OUT OF STOCK ITEMS***********%n"));
         printOutput(1, header);
         for (int i =0; i<size; i++){
@@ -222,7 +221,7 @@ public class FoodForLess{
                 printOutput(2, out);
             }
         }
-        getAnother();
+        getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
     }
 
     /**
