@@ -13,22 +13,20 @@ import java.lang.*;
 *@version 1.5
 */
 public class FoodForLess{
-    
+        public static void main(String[] args) throws IOException{
+            ArrayList<String> productCodeArray = new ArrayList<String>();
+            ArrayList<String> descriptionArray = new ArrayList<String>();
+            ArrayList<Integer> stockArray = new ArrayList<Integer>();
+            ArrayList<Double> priceArray = new ArrayList<Double>();
+            ArrayList<String> ordProdCode = new ArrayList<String>();
+            ArrayList<Integer> ordQuant = new ArrayList<Integer>();
+            int size = 0;
+            double ordValue = 0.0;
+            boolean changes = false;
 
-    public static void main(String[] args) throws IOException{
-        ArrayList<String> productCodeArray = new ArrayList<String>();
-        ArrayList<String> descriptionArray = new ArrayList<String>();
-        ArrayList<Integer> stockArray = new ArrayList<Integer>();
-        ArrayList<Double> priceArray = new ArrayList<Double>();
-        ArrayList<String> ordProdCode = new ArrayList<String>();
-        ArrayList<Integer> ordQuant = new ArrayList<Integer>();
-        int size = 0;
-        double ordValue = 0.0;
-        boolean changes = false;
-
-        size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
-        System.out.printf("%d%n", size);
-        giveStock(1, size, productCodeArray, descriptionArray, stockArray, priceArray);
+            size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
+            greeting();
+            pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size);
     }
 
     /**
@@ -100,7 +98,6 @@ public class FoodForLess{
         }
         size = priceArray.size();
         return size;
-        //greeting();
     }
 
     /**
@@ -115,7 +112,7 @@ public class FoodForLess{
     /**
     * Presents the user with a listing of the program's features. Subsequent to this, the user is allowed to specify their desired option.
     */ 
-    /*public static void giveOptions(){
+    public static void giveOptions(){
         ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n"));
         printOutput(1, prompt);
     }
@@ -125,7 +122,7 @@ public class FoodForLess{
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void pickOption() throws InputMismatchException, IOException, NumberFormatException{
+    public static void pickOption(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size) throws InputMismatchException, IOException, NumberFormatException{
         int option = 0;        
         giveOptions();        
         while (option<1 || option>5){
@@ -136,21 +133,21 @@ public class FoodForLess{
             }catch (InputMismatchException|NumberFormatException e){
                 ArrayList<String> badInput= new ArrayList<String>(Arrays.asList("That's definitely not an option on the list.%n"));
                 printOutput(1, badInput);
-                pickOption();
+                pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size);
             }            
         }
          switch(option){
-            case 1: giveStock(1);
+            case 1: giveStock(1, size, productCodeArray, descriptionArray, stockArray, priceArray);
                 break;
-            case 2: getWhatsOut();
+            /*case 2: getWhatsOut();
                 break;
             case 3: getTotalValue(1);
                 break;
             case 4: getMostExpensive();
                 break;
             case 5: getOrderSize();
-                break;
-            default: pickOption();
+                break;*/
+            default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size);
                 break;
         }                      
     }
