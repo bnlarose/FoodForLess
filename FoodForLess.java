@@ -139,9 +139,9 @@ public class FoodForLess{
                 break;
             case 2: getWhatsOut(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            /*case 3: getTotalValue(1);
+            case 3: getTotalValue(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            case 4: getMostExpensive();
+            /*case 4: getMostExpensive(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
             case 5: getOrderSize();
                 break;*/
@@ -203,7 +203,7 @@ public class FoodForLess{
             ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
             printOutput(2, ordTotal);
             //adjustInventory();
-            //getAnother();*/
+            //getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);*/
         }
     }
 
@@ -229,7 +229,7 @@ public class FoodForLess{
     *@param option Specifies what to tally total value for. Option 1 tallies current inventory. Option 2 tallies a custom order.
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void getTotalValue(int option) throws IOException{
+    public static void getTotalValue(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
         double count = 0;
         if (option == 1){
             for (int i=0; i<size; i++){
@@ -237,7 +237,7 @@ public class FoodForLess{
             }
             ArrayList<String> total= new ArrayList<String>(Arrays.asList("%nThe total value of the current stock is $%s%n", String.format("%4.2f", count)));
             printOutput(2, total);
-            getAnother();
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }else{
             for (int j=0; j<ordQuant.size(); j++){
                 count+=(ordQuant.get(j)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(j))));
@@ -273,7 +273,7 @@ public class FoodForLess{
             ArrayList<String> pricey= new ArrayList<String>(Arrays.asList("%-20s", desc, "%10s%n", String.format("%4.2f", price)));
             printOutput(2, pricey);
         }
-        getAnother();
+        getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
     }
 
     /**
