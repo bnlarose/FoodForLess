@@ -162,7 +162,7 @@ public class FoodForLess{
                 break;
             case "n": case "no": ArrayList<String> farewell= new ArrayList<String>(Arrays.asList("Goodbye!\n"));
                 printOutput(1, farewell);
-                //updateStockFile();
+                updateStockFile(productCodeArray, descriptionArray, stockArray, priceArray, changes, size);
                 break;
             default: ArrayList<String> valid= new ArrayList<String>(Arrays.asList("Please enter a valid response.\n"));
                 printOutput(1, valid);
@@ -425,11 +425,10 @@ public class FoodForLess{
     * Updates the stock.txt file with current stock levels at program termination if any custom orders have been placed
     *@exception IOException Required declaration of IOException. If the file doesn't exist, it's created; the exception isn't actually thrown
     */ 
-    /*public static void updateStockFile()throws IOException{
+    public static void updateStockFile(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray,  ArrayList<Integer> stockArray, ArrayList<Double> priceArray, boolean changes, int size)throws IOException{
         if (changes){
             String file = "stock3.txt";
-            String line= "";
-            String code, label, count, cost="";
+            String line, code, label, count, cost= "";
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             for (int i=0; i<size; i++){
                 code= productCodeArray.get(i)+ " ";
@@ -446,5 +445,5 @@ public class FoodForLess{
             }
             writer.close();        
         }
-    }*/      
+    }      
 }   
