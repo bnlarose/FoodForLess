@@ -143,8 +143,8 @@ public class FoodForLess{
                 break;
             case 4: getMostExpensive(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            /*case 5: getOrderSize();
-                break;*/
+            case 5: getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+                break;
             default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
         }                      
@@ -188,7 +188,7 @@ public class FoodForLess{
                 ArrayList<String> listing = new ArrayList<String>(Arrays.asList("%-16s", productCode, "%-20s", description, "%-12s", Integer.toString(stock), "%10s", String.format("%10.2f", price), "%17s%n", String.format("%13.2f", totals)));
                 printOutput(2, listing);
             }
-            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);/*
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }else{
             ArrayList<String> header2= new ArrayList<String>(Arrays.asList("%35s\n", "YOUR ORDER:","%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Item Total"));
             printOutput(2, header2);
@@ -203,7 +203,7 @@ public class FoodForLess{
             ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
             printOutput(2, ordTotal);
             //adjustInventory();
-            //getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);*/
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }
     }
 
@@ -243,6 +243,7 @@ public class FoodForLess{
                 count+=(ordQuant.get(j)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(j))));
             }
             ordValue= count;
+            giveStock(2, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }
     }
 
@@ -280,14 +281,14 @@ public class FoodForLess{
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void getOrderSize() throws InputMismatchException, IOException, NumberFormatException{
+    public static void getOrderSize(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws InputMismatchException, IOException, NumberFormatException{
         try{
             int orderSize= Integer.valueOf(getUserInput("\nHow many items would you like to order?: "));
-            placeOrders(orderSize, 1);
+            placeOrders(orderSize, 1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         } catch (InputMismatchException|NumberFormatException wType) {
             ArrayList<String> valNum= new ArrayList<String>(Arrays.asList("\nPlease enter a valid number size.\n"));
             printOutput(1, valNum);
-            getOrderSize();
+            getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }        
     }
 
@@ -298,10 +299,10 @@ public class FoodForLess{
     *@param mode Allows for the order loop to be broken by {@link #optOut()} if the user so chooses
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void placeOrders(int orderSize, int mode) throws IOException{
+    public static void placeOrders(int orderSize, int mode, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
         orders:{
             for(int i=0; i<orderSize; i++){
-                verifyProdCode(i);
+                verifyProdCode(i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 if (i<orderSize-1){
                     int choice= optOut();
                     if (choice==1){
@@ -311,14 +312,13 @@ public class FoodForLess{
             }
         }
         changes=true;                                
-        getTotalValue(2);
-        giveStock(2);
+        getTotalValue(2, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
     }
 
     /**
     * Lists the product codes of the current inventory. Used in tandem with {@link #verifyProductCode()}
     */ 
-    /*public static void giveProdCodes(){
+    public static void giveProdCodes(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, int size){
         ArrayList<String> listing= new ArrayList<String>(Arrays.asList("\nThese are the product codes of the items currently in stock: %n"));
         printOutput(1, listing);
         for (int i=0; i<size; i++){
@@ -335,19 +335,19 @@ public class FoodForLess{
     * Verifies that the product code entered corresponds to an item in the inventory
     *@param i The loop count (and item number, if increased by 1). Used in this procedure to help the user keep track of the current item's position in the intended order
     */ 
-    /*public static void verifyProdCode(int i){
-        giveProdCodes();
+    public static void verifyProdCode(int i, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes){
+        giveProdCodes(productCodeArray, descriptionArray, stockArray, size);
         int itemNo= i+1;
-        String prompt= "Please enter the product code for item"+Integer.toString(itemNo)+": ";
+        String prompt= "Please enter the product code for item "+Integer.toString(itemNo)+": ";
         String ordProductCode = getUserInput(prompt);
         ordProductCode = ordProductCode.toUpperCase();
         int position = productCodeArray.indexOf(ordProductCode);
         if (position>=0){
-            verifyQuantity(position, i);
+            verifyQuantity(position, i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }else{
             ArrayList<String> error= new ArrayList<String>(Arrays.asList("I'm sorry, but that product code does not exist in our inventory.%n"));
             printOutput(1, error);
-            verifyProdCode(i);
+            verifyProdCode(i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }
     }
 
@@ -356,22 +356,22 @@ public class FoodForLess{
     *@param position The position of the selected product's data in the main program arrays
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
     */ 
-    /*public static void verifyQuantity(int position, int i) throws NumberFormatException{
+    public static void verifyQuantity(int position, int i,  ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws NumberFormatException{
         String avail= Integer.toString(stockArray.get(position));
         String desc= descriptionArray.get(position);
         String prompt= "%nWe have " + avail + " "+ desc + " in stock. How many would you like?: ";
         try{
             int quant = Integer.valueOf(getUserInput(prompt));
             if (quant<=stockArray.get(position)){
-                addToOrder(position, quant, i);
+                addToOrder(position, quant, i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
             }else{
                 ArrayList<String> tooMany= new ArrayList<String>(Arrays.asList("I'm sorry, but you can order a maximum of "+ avail +" " + desc));
-                verifyQuantity(position, i);
+                verifyQuantity(position, i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
             }
         } catch (NumberFormatException inval){
             ArrayList<String> wType= new ArrayList<String>(Arrays.asList("I'm pretty sure that's not even a number..."));
             printOutput(1, wType);
-            verifyQuantity(position, i);
+            verifyQuantity(position, i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }
     }
 
@@ -381,7 +381,7 @@ public class FoodForLess{
     *@param quant The desired quantity of the selected product. Also obtained in {@link #verifyQuantity}
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
     */ 
-    /*public static void addToOrder(int position, int quant, int i){
+    public static void addToOrder(int position, int quant, int i, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes){
         ordProdCode.add(productCodeArray.get(position));
         ordQuant.add(quant);
         String message= Integer.toString(quant)+ " "+ descriptionArray.get(position)+ " have been added to your order.%n%n";
@@ -393,7 +393,7 @@ public class FoodForLess{
     * Allows the user to end the ordering process by inputting "n" or "no"
     *@return prompt Specifies whether the user wishes to end the ordering process (facilitated by {@link #placeOrders}).
     */   
-    /*public static int optOut(){
+    public static int optOut(){
         ArrayList<String> negatives= new ArrayList<String>(Arrays.asList("no", "n"));
         String response = getUserInput("Type 'N' or 'No' to stop ordering [No/N]: ");
         response = response.toLowerCase();
