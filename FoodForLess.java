@@ -13,18 +13,22 @@ import java.lang.*;
 *@version 1.5
 */
 public class FoodForLess{
-    public static ArrayList<String> productCodeArray = new ArrayList<String>();
-    public static ArrayList<String> descriptionArray = new ArrayList<String>();
-    public static ArrayList<Integer> stockArray = new ArrayList<Integer>();
-    public static ArrayList<Double> priceArray = new ArrayList<Double>();
-    public static ArrayList<String> ordProdCode = new ArrayList<String>();
-    public static ArrayList<Integer> ordQuant = new ArrayList<Integer>();
-    public static int size = 0;
-    public static double ordValue = 0.0;
-    public static boolean changes = false;
+    
 
     public static void main(String[] args) throws IOException{
-        populateArrays();
+        ArrayList<String> productCodeArray = new ArrayList<String>();
+        ArrayList<String> descriptionArray = new ArrayList<String>();
+        ArrayList<Integer> stockArray = new ArrayList<Integer>();
+        ArrayList<Double> priceArray = new ArrayList<Double>();
+        ArrayList<String> ordProdCode = new ArrayList<String>();
+        ArrayList<Integer> ordQuant = new ArrayList<Integer>();
+        int size = 0;
+        double ordValue = 0.0;
+        boolean changes = false;
+
+        /*size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
+        System.out.printf("%d%n", size);
+        giveStock(size, productCodeArray, descriptionArray, stockArray, priceArray);*/
     }
 
     /**
