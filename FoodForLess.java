@@ -129,7 +129,6 @@ public class FoodForLess{
             String response= getUserInput("Which would you like to do?: ");
             try{
                 option = Integer.valueOf(response);
-                //System.out.printf("%d %d %n", option, option+200);                
             }catch (InputMismatchException|NumberFormatException e){
                 ArrayList<String> badInput= new ArrayList<String>(Arrays.asList("That's definitely not an option on the list.%n"));
                 printOutput(1, badInput);
@@ -137,7 +136,7 @@ public class FoodForLess{
             }            
         }
          switch(option){
-            case 1: giveStock(1, size, productCodeArray, descriptionArray, stockArray, priceArray);
+            case 1: giveStock(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
             /*case 2: getWhatsOut();
                 break;
@@ -156,28 +155,28 @@ public class FoodForLess{
     * Allows the user to perform another operation, or end the program. If the user inputs "yes", {@link #pickOption()} is called. If the user input is "no", the program terminates, with {@link #updateStockFile()} updating stock.txt if any orders were placed
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    /*public static void getAnother() throws IOException{
+    public static void getAnother(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
         String response = "";
         response = getUserInput("%nWould you like to perform another operation? [Yes/No]: ");
         switch (response.toLowerCase()){
-            case "y": case "yes": pickOption();
+            case "y": case "yes": pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
             case "n": case "no": ArrayList<String> farewell= new ArrayList<String>(Arrays.asList("Goodbye!\n"));
                 printOutput(1, farewell);
-                updateStockFile();
+                //updateStockFile();
                 break;
             default: ArrayList<String> valid= new ArrayList<String>(Arrays.asList("Please enter a valid response.\n"));
                 printOutput(1, valid);
-                getAnother();
+                getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }
-    }*/
+    }
 
     /**
     * Displays the full stock list, inclusive of out of stock items; or displays the current custom order, depended on the mode selected.
     *@param option Specifies the mode (and relative function) of the procedure. Mode 1 displays the full stock list. Mode 2 displays the details of a custom order 
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void giveStock(int option, int size, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray) throws IOException{
+    public static void giveStock(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
         if (option==1){ 
             ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:", "%-16s", "Item", "%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Stock Total"));
             printOutput(2, header);
@@ -190,7 +189,7 @@ public class FoodForLess{
                 ArrayList<String> listing = new ArrayList<String>(Arrays.asList("%-16s", productCode, "%-20s", description, "%-12s", Integer.toString(stock), "%10s", String.format("%10.2f", price), "%17s%n", String.format("%13.2f", totals)));
                 printOutput(2, listing);
             }
-            /*getAnother();
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);/*
         }else{
             ArrayList<String> header2= new ArrayList<String>(Arrays.asList("%35s\n", "YOUR ORDER:","%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Item Total"));
             printOutput(2, header2);
