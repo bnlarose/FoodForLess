@@ -26,9 +26,9 @@ public class FoodForLess{
         double ordValue = 0.0;
         boolean changes = false;
 
-        /*size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
+        size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
         System.out.printf("%d%n", size);
-        giveStock(size, productCodeArray, descriptionArray, stockArray, priceArray);*/
+        //giveStock(size, productCodeArray, descriptionArray, stockArray, priceArray);
     }
 
     /**
@@ -84,7 +84,7 @@ public class FoodForLess{
     *@exception IndexOutOfBoundsException If the data in the specified file does not match the program-specified format
     *@exception FileNotFoundException If the specified file is not found
     */ 
-    public static void populateArrays() throws IndexOutOfBoundsException, FileNotFoundException{
+    public static int populateArrays(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size) throws IndexOutOfBoundsException, FileNotFoundException{
         Scanner fileInput= openFile("stock.txt");
         while (fileInput.hasNextLine()){
             String line = fileInput.nextLine();
@@ -99,7 +99,8 @@ public class FoodForLess{
             }      
         }
         size = priceArray.size();
-        greeting();
+        return size;
+        //greeting();
     }
 
     /**
@@ -108,13 +109,13 @@ public class FoodForLess{
     public static void greeting(){
         ArrayList<String> greetings1= new ArrayList<String>(Arrays.asList("%50s%n", "Welcome to Foods for Less Grocery.", "%56s%n%n", "Proudly serving Point Fortin for over 40 years."));
         printOutput(2,greetings1);
-        pickOption();     
+        //pickOption();     
     }
 
     /**
     * Presents the user with a listing of the program's features. Subsequent to this, the user is allowed to specify their desired option.
     */ 
-    public static void giveOptions(){
+    /*public static void giveOptions(){
         ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n"));
         printOutput(1, prompt);
     }
@@ -124,7 +125,7 @@ public class FoodForLess{
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void pickOption() throws InputMismatchException, IOException, NumberFormatException{
+    /*public static void pickOption() throws InputMismatchException, IOException, NumberFormatException{
         int option = 0;        
         giveOptions();        
         while (option<1 || option>5){
@@ -158,7 +159,7 @@ public class FoodForLess{
     * Allows the user to perform another operation, or end the program. If the user inputs "yes", {@link #pickOption()} is called. If the user input is "no", the program terminates, with {@link #updateStockFile()} updating stock.txt if any orders were placed
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getAnother() throws IOException{
+    /*public static void getAnother() throws IOException{
         String response = "";
         response = getUserInput("%nWould you like to perform another operation? [Yes/No]: ");
         switch (response.toLowerCase()){
@@ -179,7 +180,7 @@ public class FoodForLess{
     *@param option Specifies the mode (and relative function) of the procedure. Mode 1 displays the full stock list. Mode 2 displays the details of a custom order 
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void giveStock(int option) throws IOException{
+    /*public static void giveStock(int option) throws IOException{
         if (option==1){ 
             ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:", "%-16s", "Item", "%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Stock Total"));
             printOutput(2, header);
@@ -215,7 +216,7 @@ public class FoodForLess{
     * Displays those items that are currently out of stock
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getWhatsOut()throws IOException{
+    /*public static void getWhatsOut()throws IOException{
         ArrayList<String> header= new ArrayList<String>(Arrays.asList("%n***********OUT OF STOCK ITEMS***********%n"));
         printOutput(1, header);
         for (int i =0; i<size; i++){
@@ -233,7 +234,7 @@ public class FoodForLess{
     *@param option Specifies what to tally total value for. Option 1 tallies current inventory. Option 2 tallies a custom order.
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getTotalValue(int option) throws IOException{
+    /*public static void getTotalValue(int option) throws IOException{
         double count = 0;
         if (option == 1){
             for (int i=0; i<size; i++){
@@ -254,7 +255,7 @@ public class FoodForLess{
     * Displays the most expensive item in the inventory
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getMostExpensive() throws IOException{
+    /*public static void getMostExpensive() throws IOException{
         double big = priceArray.get(0);
         ArrayList<Integer> upper= new ArrayList<Integer>();
         //int position = 0;
@@ -285,7 +286,7 @@ public class FoodForLess{
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getOrderSize() throws InputMismatchException, IOException, NumberFormatException{
+    /*public static void getOrderSize() throws InputMismatchException, IOException, NumberFormatException{
         try{
             int orderSize= Integer.valueOf(getUserInput("\nHow many items would you like to order?: "));
             placeOrders(orderSize, 1);
@@ -303,7 +304,7 @@ public class FoodForLess{
     *@param mode Allows for the order loop to be broken by {@link #optOut()} if the user so chooses
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void placeOrders(int orderSize, int mode) throws IOException{
+    /*public static void placeOrders(int orderSize, int mode) throws IOException{
         orders:{
             for(int i=0; i<orderSize; i++){
                 verifyProdCode(i);
@@ -323,7 +324,7 @@ public class FoodForLess{
     /**
     * Lists the product codes of the current inventory. Used in tandem with {@link #verifyProductCode()}
     */ 
-    public static void giveProdCodes(){
+    /*public static void giveProdCodes(){
         ArrayList<String> listing= new ArrayList<String>(Arrays.asList("\nThese are the product codes of the items currently in stock: %n"));
         printOutput(1, listing);
         for (int i=0; i<size; i++){
@@ -340,7 +341,7 @@ public class FoodForLess{
     * Verifies that the product code entered corresponds to an item in the inventory
     *@param i The loop count (and item number, if increased by 1). Used in this procedure to help the user keep track of the current item's position in the intended order
     */ 
-    public static void verifyProdCode(int i){
+    /*public static void verifyProdCode(int i){
         giveProdCodes();
         int itemNo= i+1;
         String prompt= "Please enter the product code for item"+Integer.toString(itemNo)+": ";
@@ -361,7 +362,7 @@ public class FoodForLess{
     *@param position The position of the selected product's data in the main program arrays
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
     */ 
-    public static void verifyQuantity(int position, int i) throws NumberFormatException{
+    /*public static void verifyQuantity(int position, int i) throws NumberFormatException{
         String avail= Integer.toString(stockArray.get(position));
         String desc= descriptionArray.get(position);
         String prompt= "%nWe have " + avail + " "+ desc + " in stock. How many would you like?: ";
@@ -386,7 +387,7 @@ public class FoodForLess{
     *@param quant The desired quantity of the selected product. Also obtained in {@link #verifyQuantity}
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
     */ 
-    public static void addToOrder(int position, int quant, int i){
+    /*public static void addToOrder(int position, int quant, int i){
         ordProdCode.add(productCodeArray.get(position));
         ordQuant.add(quant);
         String message= Integer.toString(quant)+ " "+ descriptionArray.get(position)+ " have been added to your order.%n%n";
@@ -398,7 +399,7 @@ public class FoodForLess{
     * Allows the user to end the ordering process by inputting "n" or "no"
     *@return prompt Specifies whether the user wishes to end the ordering process (facilitated by {@link #placeOrders}).
     */   
-    public static int optOut(){
+    /*public static int optOut(){
         ArrayList<String> negatives= new ArrayList<String>(Arrays.asList("no", "n"));
         String response = getUserInput("Type 'N' or 'No' to stop ordering [No/N]: ");
         response = response.toLowerCase();
@@ -412,7 +413,7 @@ public class FoodForLess{
     /**
     * Updates current stock levels after an order is completed
     */ 
-    public static void adjustInventory(){
+    /*public static void adjustInventory(){
         int prevStockLvl= 0;
         int reduction = 0;
         int genPos = 0;
@@ -429,7 +430,7 @@ public class FoodForLess{
     * Updates the stock.txt file with current stock levels at program termination if any custom orders have been placed
     *@exception IOException Required declaration of IOException. If the file doesn't exist, it's created; the exception isn't actually thrown
     */ 
-    public static void updateStockFile()throws IOException{
+    /*public static void updateStockFile()throws IOException{
         if (changes){
             String file = "stock3.txt";
             String line= "";
@@ -450,5 +451,5 @@ public class FoodForLess{
             }
             writer.close();        
         }
-    }      
+    }*/      
 }   
