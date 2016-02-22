@@ -202,7 +202,7 @@ public class FoodForLess{
             }
             ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
             printOutput(2, ordTotal);
-            //adjustInventory();
+            int x= adjustInventory(ordProdCode,ordQuant, productCodeArray, stockArray);
             getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
         }
     }
@@ -407,7 +407,7 @@ public class FoodForLess{
     /**
     * Updates current stock levels after an order is completed
     */ 
-    /*public static void adjustInventory(){
+    public static int adjustInventory(ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, ArrayList<String> productCodeArray, ArrayList<Integer> stockArray){
         int prevStockLvl= 0;
         int reduction = 0;
         int genPos = 0;
@@ -418,6 +418,7 @@ public class FoodForLess{
             reduction= ordQuant.get(ordProdCode.indexOf(item));
             stockArray.set(genPos, (prevStockLvl-reduction));
         }
+        return prevStockLvl;
     }
 
     /**
