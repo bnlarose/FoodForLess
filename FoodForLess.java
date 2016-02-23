@@ -13,6 +13,10 @@ import java.lang.*;
 *@version 1.5
 */
 public class FoodForLess{
+    /**
+     * Initiates the various variables utilised throughout this program, and makes calls to {@link #greeting()} and {@link #pickOption()}
+     * @exception IOException due to chained call to {@link #populateArrays()}
+     */
         public static void main(String[] args) throws IOException{
             ArrayList<String> productCodeArray = new ArrayList<String>();
             ArrayList<String> descriptionArray = new ArrayList<String>();
@@ -79,6 +83,7 @@ public class FoodForLess{
 
     /**
     * Takes the stock list, and populates the productCode, description, Stock, and price arrays from it. The size of the arrays is also captured for use in loops.
+    *@return size of ArrayLists
     *@exception IndexOutOfBoundsException If the data in the specified file does not match the program-specified format
     *@exception FileNotFoundException If the specified file is not found
     */ 
@@ -112,19 +117,30 @@ public class FoodForLess{
     * Presents the user with a listing of the program's features. Subsequent to this, the user is allowed to specify their desired option.
     */ 
     public static void giveOptions(){
-        ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n"));
+        ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n", "6. Test Options 2, 3, and 4%n"));
         printOutput(1, prompt);
     }
 
     /**
     * Allows the user to select their desired option from the list displayed by {@link #giveOptions()}
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException IOException Thrown on account of chained calls to {@link #updateStockFile()}
+    *@exception NumberFormatException This exception is thrown if the user input cannot be parsed to an Integer
     */ 
     public static void pickOption(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws InputMismatchException, IOException, NumberFormatException{
-        int option = 0;        
+        int option = 0;
+        boolean test_mode= false;
         giveOptions();        
-        while (option<1 || option>5){
+        while (option<1 || option>6){
             String response= getUserInput("Which would you like to do?: ");
             try{
                 option = Integer.valueOf(response);
@@ -137,13 +153,15 @@ public class FoodForLess{
          switch(option){
             case 1: giveStock(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
-            case 2: getWhatsOut(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case 2: getWhatsOut(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
-            case 3: getTotalValue(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case 3: getTotalValue(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
-            case 4: getMostExpensive(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case 4: getMostExpensive(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
-            case 5: getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case 5: getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+                break;
+            case 6: runTests(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
             default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
                 break;
@@ -152,6 +170,15 @@ public class FoodForLess{
 
     /**
     * Allows the user to perform another operation, or end the program. If the user inputs "yes", {@link #pickOption()} is called. If the user input is "no", the program terminates, with {@link #updateStockFile()} updating stock.txt if any orders were placed
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
     public static void getAnother(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
@@ -172,7 +199,16 @@ public class FoodForLess{
 
     /**
     * Displays the full stock list, inclusive of out of stock items; or displays the current custom order, depended on the mode selected.
-    *@param option Specifies the mode (and relative function) of the procedure. Mode 1 displays the full stock list. Mode 2 displays the details of a custom order 
+    *@param option Specifies the mode (and relative function) of the procedure. Mode 1 displays the full stock list. Mode 2 displays the details of a custom order
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary 
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
     public static void giveStock(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
@@ -209,9 +245,18 @@ public class FoodForLess{
 
     /**
     * Displays those items that are currently out of stock
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getWhatsOut(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes)throws IOException{
+    public static void getWhatsOut(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode)throws IOException{
         ArrayList<String> header= new ArrayList<String>(Arrays.asList("%n***********OUT OF STOCK ITEMS***********%n"));
         printOutput(1, header);
         for (int i =0; i<size; i++){
@@ -221,15 +266,26 @@ public class FoodForLess{
                 printOutput(2, out);
             }
         }
-        getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+        if (test_mode==false){
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+        }
     }
 
     /**
     * Displays the total value of the current inventory, or custom order
     *@param option Specifies what to tally total value for. Option 1 tallies current inventory. Option 2 tallies a custom order.
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getTotalValue(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
+    public static void getTotalValue(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
         double count = 0;
         if (option == 1){
             for (int i=0; i<size; i++){
@@ -237,7 +293,9 @@ public class FoodForLess{
             }
             ArrayList<String> total= new ArrayList<String>(Arrays.asList("%nThe total value of the current stock is $%s%n", String.format("%4.2f", count)));
             printOutput(2, total);
-            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            if (test_mode==false){
+                getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            }
         }else{
             for (int j=0; j<ordQuant.size(); j++){
                 count+=(ordQuant.get(j)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(j))));
@@ -249,9 +307,18 @@ public class FoodForLess{
 
     /**
     * Displays the most expensive item in the inventory
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getMostExpensive(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
+    public static void getMostExpensive(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
         double big = priceArray.get(0);
         ArrayList<Integer> upper= new ArrayList<Integer>();
         for (int i=1; i<size; i++){
@@ -273,22 +340,34 @@ public class FoodForLess{
             ArrayList<String> pricey= new ArrayList<String>(Arrays.asList("%-20s", desc, "%10s%n", String.format("%4.2f", price)));
             printOutput(2, pricey);
         }
-        getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+        if (test_mode==false){
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+        }
     }
 
     /**
     * Allows the user to specify the size of the custom order
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception InputMismatchException Thrown if user enters non-numerical input
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
+    *@exception NumberFormatException This exception is thrown if the user input cannot be parsed to an Integer
     */ 
-    public static void getOrderSize(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws InputMismatchException, IOException, NumberFormatException{
+    public static void getOrderSize(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws InputMismatchException, IOException, NumberFormatException{
         try{
             int orderSize= Integer.valueOf(getUserInput("\nHow many items would you like to order?: "));
-            placeOrders(orderSize, 1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            placeOrders(orderSize, 1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         } catch (InputMismatchException|NumberFormatException wType) {
             ArrayList<String> valNum= new ArrayList<String>(Arrays.asList("\nPlease enter a valid number size.\n"));
             printOutput(1, valNum);
-            getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }        
     }
 
@@ -297,9 +376,18 @@ public class FoodForLess{
     *{@link #getTotalValue} and {@link #giveStock} are called.
     *@param orderSize The number of items to be ordered, specified in {@link #getOrderSize()}
     *@param mode Allows for the order loop to be broken by {@link #optOut()} if the user so chooses
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void placeOrders(int orderSize, int mode, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
+    public static void placeOrders(int orderSize, int mode, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
         orders:{
             for(int i=0; i<orderSize; i++){
                 verifyProdCode(i, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
@@ -312,11 +400,15 @@ public class FoodForLess{
             }
         }
         changes=true;                                
-        getTotalValue(2, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+        getTotalValue(2, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
     }
 
     /**
     * Lists the product codes of the current inventory. Used in tandem with {@link #verifyProductCode()}
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
     */ 
     public static void giveProdCodes(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, int size){
         ArrayList<String> listing= new ArrayList<String>(Arrays.asList("\nThese are the product codes of the items currently in stock: %n"));
@@ -334,6 +426,15 @@ public class FoodForLess{
     /**
     * Verifies that the product code entered corresponds to an item in the inventory
     *@param i The loop count (and item number, if increased by 1). Used in this procedure to help the user keep track of the current item's position in the intended order
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     */ 
     public static void verifyProdCode(int i, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes){
         giveProdCodes(productCodeArray, descriptionArray, stockArray, size);
@@ -355,6 +456,16 @@ public class FoodForLess{
     * Verifies that the desired quantity of the selected product can be purchased. If it can, the desired product and quantity are added to the custom order. If it cannot, the procedure informs the user, and then calls itself.
     *@param position The position of the selected product's data in the main program arrays
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
+    *@exception NumberFormatException This exception is thrown if the user input cannot be parsed to an Integer
     */ 
     public static void verifyQuantity(int position, int i,  ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws NumberFormatException{
         String avail= Integer.toString(stockArray.get(position));
@@ -379,6 +490,15 @@ public class FoodForLess{
     * Adds the specified product and quantity to the custom order
     *@param position The position of the selected product's data in the main program arrays. Obtained in {@link #verifyQuantity}
     *@param quant The desired quantity of the selected product. Also obtained in {@link #verifyQuantity}
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param ordValue a Double containing the total value of the custom order housed in ordProdCode and ordQuant (Used in Option 5)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@param i The loop count/item number from the loop initiated in {@link #getOrderSize()}
     */ 
     public static void addToOrder(int position, int quant, int i, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes){
@@ -406,6 +526,11 @@ public class FoodForLess{
 
     /**
     * Updates current stock levels after an order is completed
+    *@param ordProdCode a String ArrayList containing the product codes of items contained in a custom order (Used in Option 5)
+    *@param ordQuant an Integer ArrayList containing the desired quantity of items in a custom order (Used in Option 5)
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@return prevStockLvl in order to return updated values to calling procedure
     */ 
     public static int adjustInventory(ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, ArrayList<String> productCodeArray, ArrayList<Integer> stockArray){
         int prevStockLvl= 0;
@@ -423,6 +548,12 @@ public class FoodForLess{
 
     /**
     * Updates the stock.txt file with current stock levels at program termination if any custom orders have been placed
+    *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
+    *@param descriptionArray a String ArrayList containing the description of all items in the inventory
+    *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
+    *@param priceArray a Double ArrayList containing the price of all items in the inventory
+    *@param size the size of the inventory (Derived from the ArrayList sizes)
+    *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Required declaration of IOException. If the file doesn't exist, it's created; the exception isn't actually thrown
     */ 
     public static void updateStockFile(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray,  ArrayList<Integer> stockArray, ArrayList<Double> priceArray, boolean changes, int size)throws IOException{
@@ -445,5 +576,88 @@ public class FoodForLess{
             }
             writer.close();        
         }
+    }
+
+    public static void runTests(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
+        test_mode= true;
+        testOut(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+        testTotals(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+        testMax(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+    }
+
+    public static void testOut(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
+        ArrayList<Integer> quant1= new ArrayList<Integer>(Arrays.asList(5, 7, 9));
+        ArrayList<String> products1= new ArrayList<String>(Arrays.asList("Product A", "Product B", "Product C"));
+        ArrayList<String> results1= new ArrayList<String>(Arrays.asList("%nNo items out of stock"));
+        printOutput(1, results1);
+        size= 3;
+        getWhatsOut(productCodeArray, products1, quant1, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Integer> quant2= new ArrayList<Integer>(Arrays.asList(5, 7, 0, 9, 0, 0));
+        ArrayList<String> products2= new ArrayList<String>(Arrays.asList("Product A", "Product B", "Product C", "Product D", "Product E", "Product F"));
+        ArrayList<String> results2= new ArrayList<String>(Arrays.asList("%nProducts C, E, and F out of stock"));
+        printOutput(1, results2);
+        size= 6;
+        getWhatsOut(productCodeArray, products2, quant2, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Integer> quant3= new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0));
+        ArrayList<String> products3= new ArrayList<String>(Arrays.asList("Product A", "Product B", "Product C", "Product D", "Product E"));
+        ArrayList<String> results3= new ArrayList<String>(Arrays.asList("%nAll items (A-E) out of stock"));
+        printOutput(1, results3);
+        size= 5;
+        getWhatsOut(productCodeArray, products3, quant3, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+    }
+
+    public static void testTotals(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
+        ArrayList<Double> prices1= new ArrayList<Double>(Arrays.asList());
+        ArrayList<Integer> vol1= new ArrayList<Integer>(Arrays.asList());
+        ArrayList<String> results1= new ArrayList<String>(Arrays.asList("%nNo items to tally"));
+        printOutput(1, results1);
+        size= 0;
+        getTotalValue(1, productCodeArray, descriptionArray, vol1, prices1, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Double> prices2= new ArrayList<Double>(Arrays.asList(5.32, 7.96, 15.03));
+        ArrayList<Integer> vol2= new ArrayList<Integer>(Arrays.asList(1, 3, 2));
+        ArrayList<String> results2= new ArrayList<String>(Arrays.asList("%nTotal is $59.26"));
+        printOutput(1, results2);
+        size= 3;
+        getTotalValue(1, productCodeArray, descriptionArray, vol2, prices2, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Double> prices3= new ArrayList<Double>(Arrays.asList(5.32, 7.96, 15.03, 55.78, 0.01, 1.00, 3.50, 12.50));
+        ArrayList<Integer> vol3= new ArrayList<Integer>(Arrays.asList(2, 2, 2, 2, 2, 2, 2, 2));
+        ArrayList<String> results3= new ArrayList<String>(Arrays.asList("%nTotal is $202.20"));
+        printOutput(1, results3);
+        size= 8;
+        getTotalValue(1, productCodeArray, descriptionArray, vol3, prices3, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Double> prices4= new ArrayList<Double>(Arrays.asList(5.32, 7.96, 15.03, 55.78, 0.01, 1.00, 3.50, 12.50, 500.00, 250.0, 0.30, 7.25, 33.33));
+        ArrayList<Integer> vol4= new ArrayList<Integer>(Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
+        ArrayList<String> results4= new ArrayList<String>(Arrays.asList("%nTotal is $891.98"));
+        printOutput(1, results4);
+        size= 13;
+        getTotalValue(1, productCodeArray, descriptionArray, vol4, prices4, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+    }
+
+    public static void testMax(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
+        ArrayList<Double> prices1= new ArrayList<Double>(Arrays.asList(2.00, 2.00, 2.00, 2.00, 2.00));
+        ArrayList<String> desc1= new ArrayList<String>(Arrays.asList("Product A", "Product B", "Product C", "Product D", "Product E"));
+        ArrayList<String> results1= new ArrayList<String>(Arrays.asList("%nAll items same price (Products A-E listed)"));
+        printOutput(1, results1);
+        size= 5;
+        getMostExpensive(productCodeArray, desc1, stockArray, prices1, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Double> prices2= new ArrayList<Double>(Arrays.asList(2.00, 2.00, 2.00, 8.00, 2.00));
+        ArrayList<String> desc2= new ArrayList<String>(Arrays.asList("Product A", "Product B", "Product C", "Product D", "Product E"));
+        ArrayList<String> results2= new ArrayList<String>(Arrays.asList("%nProduct D is most expensive at $8.00"));
+        printOutput(1, results2);
+        size= 5;
+        getMostExpensive(productCodeArray, desc2, stockArray, prices2, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+
+        ArrayList<Double> prices3= new ArrayList<Double>(Arrays.asList(2.00, 12.00, 2.00, 2.00, 12.00));
+        ArrayList<String> desc3= new ArrayList<String>(Arrays.asList("Product A", "Product B", "Product C", "Product D", "Product E"));
+        ArrayList<String> results3= new ArrayList<String>(Arrays.asList("%nProducts B and E are the most expensive, and cost $12.00"));
+        printOutput(1, results3);
+        size= 5;
+        getMostExpensive(productCodeArray, desc3, stockArray, prices3, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
     }      
 }   
