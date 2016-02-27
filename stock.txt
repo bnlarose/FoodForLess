@@ -3,3 +3,9 @@ F4WR Flour 26 11.90
 3GGZ Eggs 0 13.30
 8U773R Butter 49 4.25
 CB33F Corned_Beef 0 18.50
+S0DA Soda 60 6.00
+CR3AL Cereal 20 32.75
+BRD Bread 0 10.00
+BCN Bacon 12 14.75
+SUGR Sugar 13 20.00
+H0N3Y Honey 5 185.00 

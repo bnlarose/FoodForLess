@@ -10,7 +10,7 @@ import java.lang.*;
 *<ol><li>listing the current inventory</li> <li>what is not in stock</li> <li>the most expensive item in stock</li> <li>the total value of the current inventory</li> <li>allowing the user to create a custom order</li></ol>
 *@author Berhane-Hiwet N. La Rose
 *@since 28-Nov-15
-*@version 1.5
+*@version 1.7
 */
 public class FoodForLess{
     /**
