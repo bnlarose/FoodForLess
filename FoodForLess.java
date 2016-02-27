@@ -14,23 +14,35 @@ import java.lang.*;
 */
 public class FoodForLess{
     /**
-     * Initiates the various variables utilised throughout this program, and makes calls to {@link #greeting()} and {@link #pickOption()}
+     * Initiates the various variables utilised throughout this program, and makes calls to {@link #greeting()} and {@link #pickOption()}. Also allows for the program to be launched in test mode, via use of the "t" command line argument
      * @exception IOException due to chained call to {@link #populateArrays()}
      */
         public static void main(String[] args) throws IOException{
-            ArrayList<String> productCodeArray = new ArrayList<String>();
-            ArrayList<String> descriptionArray = new ArrayList<String>();
-            ArrayList<Integer> stockArray = new ArrayList<Integer>();
-            ArrayList<Double> priceArray = new ArrayList<Double>();
-            ArrayList<String> ordProdCode = new ArrayList<String>();
-            ArrayList<Integer> ordQuant = new ArrayList<Integer>();
-            int size = 0;
-            double ordValue = 0.0;
-            boolean changes = false;
+        ArrayList<String> productCodeArray = new ArrayList<String>();
+        ArrayList<String> descriptionArray = new ArrayList<String>();
+        ArrayList<Integer> stockArray = new ArrayList<Integer>();
+        ArrayList<Double> priceArray = new ArrayList<Double>();
+        ArrayList<String> ordProdCode = new ArrayList<String>();
+        ArrayList<Integer> ordQuant = new ArrayList<Integer>();
+        int size = 0;
+        double ordValue = 0.0;
+        boolean changes = false;
+        boolean test_mode= false;
+        String input= "";
+        
+        size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
 
-            size= populateArrays(productCodeArray, descriptionArray, stockArray, priceArray, size);
-            greeting();
-            pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+        if (args.length>0){
+            input= args[0].toLowerCase();
+            char mode= input.charAt(0);
+            if (mode=='t'){
+                test_mode=true;
+                runTests(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
+            }         
+        }
+        
+        greeting();
+        pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
     }
 
     /**
@@ -117,7 +129,7 @@ public class FoodForLess{
     * Presents the user with a listing of the program's features. Subsequent to this, the user is allowed to specify their desired option.
     */ 
     public static void giveOptions(){
-        ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n", "6. Test Options 2, 3, and 4%n"));
+        ArrayList<String> prompt= new ArrayList<String>(Arrays.asList("%nKindly select an option from the list below:%n", "1. Display current stock levels and values%n", "2. Display all out of stock items%n", "3. Display total value of current stock%n", "4. Identify most expensive food item%n", "5. Create an order from current inventory%n"));
         printOutput(1, prompt);
     }
 
@@ -136,9 +148,8 @@ public class FoodForLess{
     *@exception IOException IOException Thrown on account of chained calls to {@link #updateStockFile()}
     *@exception NumberFormatException This exception is thrown if the user input cannot be parsed to an Integer
     */ 
-    public static void pickOption(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws InputMismatchException, IOException, NumberFormatException{
+    public static void pickOption(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws InputMismatchException, IOException, NumberFormatException{
         int option = 0;
-        boolean test_mode= false;
         giveOptions();        
         while (option<1 || option>6){
             String response= getUserInput("Which would you like to do?: ");
@@ -147,11 +158,11 @@ public class FoodForLess{
             }catch (InputMismatchException|NumberFormatException e){
                 ArrayList<String> badInput= new ArrayList<String>(Arrays.asList("That's definitely not an option on the list.%n"));
                 printOutput(1, badInput);
-                pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+                pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
             }            
         }
          switch(option){
-            case 1: giveStock(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case 1: giveStock(1, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
             case 2: getWhatsOut(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
@@ -161,9 +172,7 @@ public class FoodForLess{
                 break;
             case 5: getOrderSize(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
-            case 6: runTests(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
-                break;
-            default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            default: pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
         }                      
     }
@@ -181,11 +190,11 @@ public class FoodForLess{
     *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void getAnother(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
+    public static void getAnother(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
         String response = "";
         response = getUserInput("%nWould you like to perform another operation? [Yes/No]: ");
         switch (response.toLowerCase()){
-            case "y": case "yes": pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            case "y": case "yes": pickOption(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
                 break;
             case "n": case "no": ArrayList<String> farewell= new ArrayList<String>(Arrays.asList("Goodbye!\n"));
                 printOutput(1, farewell);
@@ -193,7 +202,7 @@ public class FoodForLess{
                 break;
             default: ArrayList<String> valid= new ArrayList<String>(Arrays.asList("Please enter a valid response.\n"));
                 printOutput(1, valid);
-                getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+                getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }
     }
 
@@ -211,7 +220,7 @@ public class FoodForLess{
     *@param changes a Boolean indicating whether or not stock values have changed. Used to trigger {@link #updateStockFile()} upon program termination when necessary 
     *@exception IOException Thrown on account of chained calls to {@link #updateStockFile()}
     */ 
-    public static void giveStock(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes) throws IOException{
+    public static void giveStock(int option, ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
         if (option==1){ 
             ArrayList<String> header= new ArrayList<String>(Arrays.asList("%55s\n", "INVENTORY AND CURRENT STOCK LEVELS:", "%-16s", "Item", "%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Stock Total"));
             printOutput(2, header);
@@ -224,7 +233,7 @@ public class FoodForLess{
                 ArrayList<String> listing = new ArrayList<String>(Arrays.asList("%-16s", productCode, "%-20s", description, "%-12s", Integer.toString(stock), "%10s", String.format("%10.2f", price), "%17s%n", String.format("%13.2f", totals)));
                 printOutput(2, listing);
             }
-            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }else{
             ArrayList<String> header2= new ArrayList<String>(Arrays.asList("%35s\n", "YOUR ORDER:","%-20s", "Description", "%-12s", "Quantity", "%-16s", "Unit Price", "%-15s%n", "Item Total"));
             printOutput(2, header2);
@@ -239,7 +248,7 @@ public class FoodForLess{
             ArrayList<String> ordTotal= new ArrayList<String>(Arrays.asList("%n%42s", "Total","%4s", "", "%14s%n", String.format("%10.2f%n", ordValue)));
             printOutput(2, ordTotal);
             int x= adjustInventory(ordProdCode,ordQuant, productCodeArray, stockArray);
-            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }
     }
 
@@ -267,7 +276,7 @@ public class FoodForLess{
             }
         }
         if (test_mode==false){
-            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }
     }
 
@@ -294,14 +303,14 @@ public class FoodForLess{
             ArrayList<String> total= new ArrayList<String>(Arrays.asList("%nThe total value of the current stock is $%s%n", String.format("%4.2f", count)));
             printOutput(2, total);
             if (test_mode==false){
-                getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+                getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
             }
         }else{
             for (int j=0; j<ordQuant.size(); j++){
                 count+=(ordQuant.get(j)*priceArray.get(productCodeArray.indexOf(ordProdCode.get(j))));
             }
             ordValue= count;
-            giveStock(2, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            giveStock(2, productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }
     }
 
@@ -341,7 +350,7 @@ public class FoodForLess{
             printOutput(2, pricey);
         }
         if (test_mode==false){
-            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes);
+            getAnother(productCodeArray, descriptionArray, stockArray, priceArray, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
         }
     }
 
@@ -547,7 +556,7 @@ public class FoodForLess{
     }
 
     /**
-    * Updates the stock.txt file with current stock levels at program termination if any custom orders have been placed
+    * Updates the stock.txt file with current stock levels at program termination if any custom orders have been placed (Currently set to write to a different file than the input file for testing purposes)
     *@param productCodeArray a String ArrayList containing the product codes of all items in the inventory 
     *@param descriptionArray a String ArrayList containing the description of all items in the inventory
     *@param stockArray an Integer ArrayList containing the quantity in stock of all items in the inventory
@@ -611,7 +620,7 @@ public class FoodForLess{
     public static void testTotals(ArrayList<String> productCodeArray, ArrayList<String> descriptionArray, ArrayList<Integer> stockArray, ArrayList<Double> priceArray, int size, ArrayList<String> ordProdCode, ArrayList<Integer> ordQuant, double ordValue, boolean changes, boolean test_mode) throws IOException{
         ArrayList<Double> prices1= new ArrayList<Double>(Arrays.asList());
         ArrayList<Integer> vol1= new ArrayList<Integer>(Arrays.asList());
-        ArrayList<String> results1= new ArrayList<String>(Arrays.asList("%nNo items to tally"));
+        ArrayList<String> results1= new ArrayList<String>(Arrays.asList("%nTotal is $0.00"));
         printOutput(1, results1);
         size= 0;
         getTotalValue(1, productCodeArray, descriptionArray, vol1, prices1, size, ordProdCode, ordQuant, ordValue, changes, test_mode);
